@@ -63,6 +63,10 @@ module Split
       elsif @experiment.has_winner?
         self.alternative = @experiment.winner
       else
+        if key = inherit_old_version_key
+          @user[@experiment.key] = @user[key]
+        end
+
         cleanup_old_versions
 
         if exclude_user?
@@ -71,6 +75,7 @@ module Split
           value = @user[@experiment.key]
           if value
             self.alternative = value
+            self.alternative.increment_participation if key
           else
             self.alternative = @experiment.next_alternative
 
@@ -109,6 +114,12 @@ module Split
     def cleanup_old_versions
       if @experiment.version > 0
         @user.cleanup_old_versions!(@experiment)
+      end
+    end
+
+    def inherit_old_version_key
+      if @experiment.version > 0
+        @user.inherit_old_version_key!(@experiment)
       end
     end
 
