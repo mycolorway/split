@@ -38,7 +38,7 @@ module Split
 
     def inherit_old_version_key!(experiment)
       keys = user.keys.select { |k| k.match(Regexp.new(experiment.name))  }
-      keys_without_experiment(keys, experiment.key).find { |key| user[key] != experiment.control  }
+      keys_without_experiment(keys, experiment.key).find { |key| user[key] != experiment.control.name  }
     end
 
     def active_experiments
