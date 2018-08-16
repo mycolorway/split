@@ -72,11 +72,9 @@ module Split
         if exclude_user?
           self.alternative = @experiment.control
         else
-          value = @user[@experiment.key]
-          if value
-            self.alternative = value
-            self.alternative.increment_participation if key
-          else
+          self.alternative = @user[@experiment.key]
+          self.alternative.increment_participation if alternative && key
+          if alternative.nil?
             self.alternative = @experiment.next_alternative
 
             # Increment the number of participants since we are actually choosing a new alternative
